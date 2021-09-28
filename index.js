@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const user = require('./api/user')
 const order = require('./api/order')
+const restaurant = require('./api/restaurant')
 
 mongoose.connect('mongodb://localhost:27017/foodie', {
     useNewUrlParser: true,
@@ -19,6 +20,7 @@ app.use(bodyParser.json())
 
 app.use('/', user)
 app.use('/', order)
+app.use('/', restaurant)
 
 app.get('/', (req, res) => {
     res.send("Test response")
