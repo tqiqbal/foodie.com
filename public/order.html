@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foodie | Delicious Food</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <form id="order">
+    <div class="container">
+      <a href="/">Home</a> |
+      <span id="logout" style="text-decoration: underline;"><a id="logout" type="button" onclick="logOut()">Log Out</a></span>
+      
+      <h1>Welcome to Foodie.com</h1>
+      <h3>An Online Food Delivery Platform</h3>
+      <br>
+
+      <label for="name"><b>Select Restaurant</b></label>
+      <select name="restaurant" id="selectRestaurant">
+        <option>Select Restaurant</option>
+      </select>
+
+      <label for="detail"><b>Order Detail</b></label>
+      <input type="text" placeholder="Enter detail" name="detail" id="detail" required>
+
+      <hr>
+      <button type="submit" class="registerbtn">Order Now</button>
+    </div>
+
+  </form>
+</body>
+
+</html>
+
+<script>
+
+  async function fetchRestaurant() {
+    let response = await fetch('/api/restaurant')
+    let restaurants = await response.json()
+
+    var select = document.getElementById("selectRestaurant");
+
+    for (var i = 0; i < restaurants.length; i++) {
+      var opt = restaurants[i].name;
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+  }
+
+  window.onload = fetchRestaurant()
+
+  // order online
+  order.onsubmit = async (e) => {
+    e.preventDefault();
+    let username = localStorage.getItem("username")
+
+    let response = await fetch(`api/order/${username}`, {
+      method: 'POST',
+      body: new FormData(order)
+    })
+
+    let result = await response.json()
+    if (result.status == "ok") {
+      alert("Order submitted successfully !")
+      window.location.href = "/";
+    } else {
+      alert(result.error.message);
+    }
+
+
+  };
+
+</script>

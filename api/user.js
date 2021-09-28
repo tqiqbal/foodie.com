@@ -20,13 +20,16 @@ router.get('/api/user/profile/:username', async (req, res) => {
 router.post('/api/user/register', async (req, res) => {
   try {
  
-    let user = await User.findOne({ username: req.body.username }).exec()
+    console.log(JSON.stringify(req.fields))
+    const request = req.fields
+
+    let user = await User.findOne({ username: request.username }).exec()
     if (user) return res.send({ error: { code: 400, message: 'User already registered.' } })
 
-    user = await User.findOne({ email: req.body.email }).exec()
+    user = await User.findOne({ email: request.email }).exec()
     if (user) return res.send({ error: { code: 400, message: 'User already registered.' } })
 
-    const newUser = new User(req.body)
+    const newUser = new User(request)
 
     newUser.save(function (err, user) {
         if (err){
@@ -34,15 +37,17 @@ router.post('/api/user/register', async (req, res) => {
         }
       })
 
-    res.send(newUser)
+    res.send({ status: "ok"})
   } catch (error) {
+    console.log(error)
     res.send({ error: { code: 500, message: error.message } })
   }
 
 })
 
 router.post('/api/user/auth', async(req, res) => {
-    const auth = req.body
+    console.log(JSON.stringify(req.fields))
+    const auth = req.fields
     if(!auth.username) {
         return res.send({ error: { code: 400,  message: "Bad Request. Username is missing"} })
     }
@@ -51,7 +56,7 @@ router.post('/api/user/auth', async(req, res) => {
         return res.send({ error: { code: 400,  message: "Bad Request. Password is missing"} })
     }
     
-    let user = await User.findOne({ username: req.body.username, password: req.body.password }).exec()
+    let user = await User.findOne({ username: auth.username, password: auth.password }).exec()
 
     if(!user) {
         return res.send({ error: { code: 400,  message: "Invalid username or password"} })

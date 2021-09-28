@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodie | Delicious Food</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="/">Home</a> |
+    <span id="register"><a href="/register.html">Register</a> |</span>
+    <span id="signin"><a href="/signin.html">Sing In</a> |</span>
+    <span id="order"><a href="/order.html">Order Food</a> | </span>
+    <span id="logout" style="text-decoration: underline;"><a id="logout" type="button" onclick="logOut()">Log Out</a></span>
+    
+    <h1>Welcome to Foodie.com</h1>
+    <h3>An Online Food Delivery Platform</h3>
+    <br>
+
+    <table id="tableData" align="center">
+        <tr>
+            <td style="width: 70%;">
+                <div id="order">
+                    <h3>My Orders</h3>
+                    <div id="myOrders"></div>
+                </div>
+            </td>
+            <td>
+                <div id="restaurant">
+                    <h3>Restaurant List</h3>
+                    <div id="myData"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>
+
+
+<script>
+    let isLoggedIn = localStorage.getItem('isLoggedIn')
+    let username = localStorage.getItem('username')
+    console.log(username)
+
+    if (!isLoggedIn) {
+        document.getElementById("tableData").style.display = "none";
+        document.getElementById("order").style.display = "none";
+        document.getElementById("logout").style.display = "none";
+    } 
+
+    if(isLoggedIn) {
+        document.getElementById("register").style.display = "none";
+        document.getElementById("signin").style.display = "none"
+    }
+
+
+
+    fetch('/api/restaurant')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            appendData(data);
+        })
+        .catch(function (err) {
+            console.log('error: ' + err);
+        })
+
+    fetch(`/api/order/${username}`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            appendOrder(data);
+        })
+        .catch(function (err) {
+            console.log('error: ' + err)
+        })
+
+    function appendData(data) {
+        var mainContainer = document.getElementById("myData")
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = 'Name: ' + data[i].name + ' | Description: ' + data[i].description + '<hr>'
+            mainContainer.appendChild(div);
+        }
+    }
+
+    function appendOrder(data) {
+        var mainContainer = document.getElementById("myOrders");
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = 'Order Id: ' + data[i].orderId + ' | ' + 'Restaurant Name: ' + data[i].restaurantName + ' | Order Detail: ' + data[i].orderText + '<hr>';
+            mainContainer.appendChild(div);
+        }
+    }
+
+    // log out
+    function logOut() {
+        console.log("Hit")
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('username')
+        location.reload();
+    }
+
+</script>

@@ -17,22 +17,27 @@ router.get('/api/order/:username', async (req, res) => {
 
 
 //create new order
-router.post('/api/order', async (req, res) => {
+router.post('/api/order/:id', async (req, res) => {
   try {
-    let order = req.body
-    // generate order id
-    let orderId = (Math.random() + 1).toString(36).substring(7)
-    order.orderId = orderId
+    let order = req.fields
+    console.log(order)
+    let createOrder = {
+      orderId: (Math.random() + 1).toString(36).substring(7),
+      username: req.params.id,
+      restaurantName: order.restaurant,
+      orderText: order.detail
+    }
 
-    const newOrder = new Order(order)
+    console.log(createOrder)
+    const newOrder = new Order(createOrder)
 
     newOrder.save(function (err, order) {
-        if (err){
+        if (err) {
             // error
         }
       })
 
-    res.send(newOrder)
+    res.send({ status: "ok"})
   } catch (error) {
     res.send({ error: { code: 500, message: error.message } })
   }

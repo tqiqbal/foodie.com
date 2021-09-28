@@ -12,10 +12,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  restaurantId: {
-    type: String,
-    required: true
-  },
+  // restaurantId: {
+  //   type: String,
+  //   required: true
+  // },
   orderText: {
     type: String,
     required: true
