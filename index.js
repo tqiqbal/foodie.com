@@ -8,6 +8,7 @@ const order = require('./api/order')
 const restaurant = require('./api/restaurant')
 
 
+
 const app = express()
 app.use(formidableMiddleware())
 
@@ -18,8 +19,9 @@ app.use('/', restaurant)
 app.use(express.static('public'))
 
 app.get('/healthz', (req, res) => {
-    res.send("Status: OK")
+    res.send({ "Status": "ok" })
 })
+
 
 const port = process.env.PORT || 3000
 
@@ -35,6 +37,7 @@ mongoose.connect('mongodb://localhost:27017/foodie', options)
     .then(() => {
       console.log({ level: 'info', message: 'Connected to User DB...' })
       app.listen(port, () => console.log(`Listening on port ${port}...`))
+      require('./startup')
     })
     .catch(err => console.log(err.message))
 
