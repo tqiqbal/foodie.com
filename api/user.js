@@ -19,8 +19,6 @@ router.get('/api/user/profile/:username', async (req, res) => {
 
 router.post('/api/user/register', async (req, res) => {
   try {
- 
-    console.log(JSON.stringify(req.fields))
     const request = req.fields
 
     let user = await User.findOne({ username: request.username }).exec()
@@ -39,14 +37,12 @@ router.post('/api/user/register', async (req, res) => {
 
     res.send({ status: "ok"})
   } catch (error) {
-    console.log(error)
     res.send({ error: { code: 500, message: error.message } })
   }
 
 })
 
 router.post('/api/user/auth', async(req, res) => {
-    console.log(JSON.stringify(req.fields))
     const auth = req.fields
     if(!auth.username) {
         return res.send({ error: { code: 400,  message: "Bad Request. Username is missing"} })

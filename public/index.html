@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foodie | Delicious Food</title>
+    <title>Foodie | Online Food Delivery Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -17,9 +17,10 @@
     <span id="logout" style="text-decoration: underline;"><a id="logout" type="button" onclick="logOut()">Log Out</a></span>
     
     <h1>Welcome to Foodie.com</h1>
-    <h3>An Online Food Delivery Platform</h3>
-    <br>
+    <p id="welcome"></p>
+    <hr>
 
+    <!-- <p>Kindly sign in to order food online.</p> -->
     <table id="tableData" align="center">
         <tr>
             <td style="width: 70%;">
@@ -45,7 +46,6 @@
 <script>
     let isLoggedIn = localStorage.getItem('isLoggedIn')
     let username = localStorage.getItem('username')
-    console.log(username)
 
     if (!isLoggedIn) {
         document.getElementById("tableData").style.display = "none";
@@ -56,6 +56,7 @@
     if(isLoggedIn) {
         document.getElementById("register").style.display = "none";
         document.getElementById("signin").style.display = "none"
+        document.getElementById("welcome").innerHTML = `Logged user ${username}`
     }
 
 
@@ -102,7 +103,6 @@
 
     // log out
     function logOut() {
-        console.log("Hit")
         localStorage.removeItem('isLoggedIn')
         localStorage.removeItem('username')
         location.reload();

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodie | Online Food Delivery Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="/admin.html">Home</a> |
+    <span id="register"><a href="/register.html">Register</a> |</span>
+    <span id="signin"><a href="/signin.html">Sing In</a> |</span>
+    <span id="order"><a href="/healthz">Health Check</a> | </span>
+    <span id="logout" style="text-decoration: underline;"><a id="logout" type="button" onclick="logOut()">Log Out</a></span>
+    
+    <h1>Welcome to Foodie.com</h1>
+    <p>Logged user admin</p>
+    <hr>
+
+    <div id="button">
+        <button onclick="add()">Add Restaurant</button>
+        <button onclick="update()">Update Restaurant</button>
+        <button onclick="deleteRestaurant()">Delete Restaurant</button>
+    </div>
+
+    <table id="tableData" align="center">
+        <tr>
+            <td style="width: 70%;">
+                <div id="order">
+                    <h3>All Orders</h3>
+                    <div id="myOrders"></div>
+                </div>
+            </td>
+            <td>
+                <div id="restaurant">
+                    <h3>Restaurant List</h3>
+                    <div id="myData"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <hr>
+
+    <!-- Add restaurant -->
+    <form id="new_restaurant">
+        <div class="container"
+    
+          <label for="name"><b>Restaurant Name</b></label>
+          <input type="text" placeholder="Enter Name" name="name" id="name" required>
+
+          <label for="description"><b>Description</b></label>
+          <input type="text" placeholder="Enter Description" name="description" id="description" required>
+    
+          <hr>
+          <button type="submit" class="registerbtn">Add Restaurant</button>
+          <button type="button" onclick="backToAdmin()" class="registerbtn">Back</button>
+        </div>
+      </form>
+
+          <!-- Update restaurant -->
+    <form id="update_restaurant">
+        <div class="container"
+    
+          <label for="restaurantId"><b>ID</b></label>
+          <input type="text" placeholder="Enter ID" name="restaurantId" id="restaurantId" required>
+
+          <label for="name"><b>Restaurant Name</b></label>
+          <input type="text" placeholder="Enter Name" name="name" id="name" required>
+
+          <label for="description"><b>Description</b></label>
+          <input type="text" placeholder="Enter Description" name="description" id="description" required>
+    
+          <hr>
+          <button type="submit" class="registerbtn">Update Restaurant</button>
+          <button type="button" onclick="backToAdmin()" class="registerbtn">Back</button>
+        </div>
+      </form>
+
+                <!-- Delete restaurant -->
+    <form id="delete_restaurant">
+        <div class="container"
+    
+          <label for="restaurantId2"><b>ID</b></label>
+          <input type="text" placeholder="Enter ID" name="restaurantId2" id="restaurantId2" required>
+          <hr>
+          <button type="submit" class="registerbtn">Delete Restaurant</button>
+          <button type="button" onclick="backToAdmin()" class="registerbtn">Back</button>
+        </div>
+      </form>
+
+</body>
+
+</html>
+
+
+<script>
+    let isLoggedIn = localStorage.getItem('isLoggedIn')
+    let username = localStorage.getItem('username')
+
+    window.onload = function () {
+        if(username != 'admin') window.location.href = '/';
+        document.getElementById("tableData").style.display = "block";
+        document.getElementById("new_restaurant").style.display = "none";
+        document.getElementById("update_restaurant").style.display = "none";
+        document.getElementById("delete_restaurant").style.display = "none";
+    }
+
+    if (!isLoggedIn) {
+        document.getElementById("tableData").style.display = "none";
+        document.getElementById("order").style.display = "none";
+        document.getElementById("logout").style.display = "none";
+    } 
+
+    if(isLoggedIn) {
+        document.getElementById("register").style.display = "none";
+        document.getElementById("signin").style.display = "none"
+    }
+
+
+    function add() {
+        document.getElementById("tableData").style.display = "none";
+        document.getElementById("button").style.display = "none";
+        document.getElementById("new_restaurant").style.display = "block";
+    }
+
+    function update() {
+        document.getElementById("tableData").style.display = "none";
+        document.getElementById("button").style.display = "none";
+        document.getElementById("update_restaurant").style.display = "block";
+    }
+
+    function deleteRestaurant() {
+        document.getElementById("tableData").style.display = "none";
+        document.getElementById("button").style.display = "none";
+        document.getElementById("delete_restaurant").style.display = "block";
+    }
+
+    function backToAdmin() {
+        window.location.href = '/admin.html'
+    }
+
+    fetch('/api/restaurant')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            appendData(data);
+        })
+        .catch(function (err) {
+            console.log('error: ' + err);
+        })
+
+    fetch(`/api/order/all`)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            appendOrder(data);
+        })
+        .catch(function (err) {
+            console.log('error: ' + err)
+        })
+
+    function appendData(data) {
+        var mainContainer = document.getElementById("myData")
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = 'ID: ' + data[i].restaurantId + ' | Name: ' + data[i].name + ' | Description: ' + data[i].description + '<hr>'
+            mainContainer.appendChild(div);
+        }
+    }
+
+    function appendOrder(data) {
+        var mainContainer = document.getElementById("myOrders");
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML = 'Order Id: ' + data[i].orderId + ' | ' + 'Restaurant Name: ' + data[i].restaurantName + ' | Order Detail: ' + data[i].orderText + '<hr>';
+            mainContainer.appendChild(div);
+        }
+    }
+
+    // log out
+    function logOut() {
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('username')
+        location.reload();
+    }
+
+ // add restaurant
+ new_restaurant.onsubmit = async (e) => {
+    e.preventDefault();
+    let username = localStorage.getItem("username")
+
+    let response = await fetch(`api/restaurant`, {
+      method: 'POST',
+      body: new FormData(new_restaurant)
+    })
+
+    let result = await response.json()
+    if (result.status == "ok") {
+      alert("Restaurant added successfully !")
+      window.location.href = "/admin.html";
+    } else {
+      alert(result.error.message);
+    }
+
+  };
+
+
+   // update restaurant
+ update_restaurant.onsubmit = async (e) => {
+    e.preventDefault();
+    // let id = document.getElementById("restaurantId").value;
+
+    let response = await fetch(`api/restaurant`, {
+      method: 'PUT',
+      body: new FormData(update_restaurant)
+    })
+
+    let result = await response.json()
+    if (result.status == "ok") {
+      alert("Restaurant updated successfully !")
+      window.location.href = "/admin.html";
+    } else {
+      alert(result.error.message);
+    }
+
+  };
+
+     // update restaurant
+ delete_restaurant.onsubmit = async (e) => {
+    e.preventDefault();
+    let id = document.getElementById("restaurantId2").value;
+
+    let response = await fetch(`api/restaurant/${id}`, {
+      method: 'DELETE',
+    //   body: new FormData(new_restaurant)
+    })
+
+    let result = await response.json()
+    if (result.status == "ok") {
+      alert("Restaurant deleted successfully !")
+      window.location.href = "/admin.html";
+    } else {
+      alert(result.error.message);
+    }
+
+  };
+
+</script>

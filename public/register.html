@@ -55,7 +55,13 @@
       })
   
       let result = await response.json()
+      if(result.status == "ok") {
+        alert("Register successfully")
+        window.location.href = "/signin.html"
+      } else {
+        alert(result.error.message);
+      }
   
-      alert(result.status);
+
     };
   </script>

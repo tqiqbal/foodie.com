@@ -54,7 +54,12 @@
     if (result.status == "ok") {
       localStorage.setItem('isLoggedIn', true)
       localStorage.setItem('username', username)
-      window.location.href = "/";
+      if(username == 'admin') {
+        window.location.href = "/admin.html";
+      } else {
+        window.location.href = "/";
+      }
+      
     } else {
       alert(result.error.message);
     }
