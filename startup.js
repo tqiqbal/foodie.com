@@ -12,7 +12,7 @@ const options = {
   }
 
 
-const mongoURL = process.env.MONGO_CONNECTION_STRING || 'mongodb://localhost:27017'
+const mongoURL = process.env.MONGO_CONNECTION_STRING || 'mongodb://mongo-db:27017'
 
 
 var connectWithRetry = function() {
