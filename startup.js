@@ -12,14 +12,14 @@ const options = {
   }
 
 
-const mongoURL = process.env.MONGO_CONNECTION_STRING || 'mongodb://mongo-db:27017'
+const mongoURL = process.env.MONGO_CONNECTION_STRING || 'mongodb://localhost:27017'
 
 
 var connectWithRetry = function() {
     return mongoose.connect(`${mongoURL}/foodie`, options, function(err) {
         if (err) {
-            console.error('Failed to connect to mongo on startup - retrying in 1 sec', err)
-            setTimeout(connectWithRetry, 1000)
+            console.error('Failed to connect to mongo on startup - retrying in 3 sec', err)
+            setTimeout(connectWithRetry, 3000)
         } else {
             console.log({ level: 'info', message: 'Connected to Foodie Database...' })
             // create admin user
@@ -40,7 +40,6 @@ async function createAdminUser() {
             const newUser = new User({
                 "name": "Admin",
                 "username": "admin",
-                "email": "admin@foodie.com",
                 "password": "manage"
             })
 

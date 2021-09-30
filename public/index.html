@@ -16,7 +16,7 @@
     <span id="order"><a href="/order.html">Order Food</a> | </span>
     <span id="logout" style="text-decoration: underline;"><a id="logout" type="button" onclick="logOut()">Log Out</a></span>
     
-    <h1>Welcome to Foodie.com</h1>
+    <h1>Foodie.com</h1>
     <p id="welcome"></p>
     <hr>
 
@@ -56,7 +56,7 @@
     if(isLoggedIn) {
         document.getElementById("register").style.display = "none";
         document.getElementById("signin").style.display = "none"
-        document.getElementById("welcome").innerHTML = `Logged user ${username}`
+        document.getElementById("welcome").innerHTML = `Welcome '${username}'`
     }
 
 
@@ -108,4 +108,11 @@
         location.reload();
     }
 
+
+    // redirect to sign in page
+    window.onload = function() {
+        if(!username) {
+            window.location.href = '/signin.html'
+        }
+    }
 </script>

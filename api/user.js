@@ -24,9 +24,6 @@ router.post('/api/user/register', async (req, res) => {
     let user = await User.findOne({ username: request.username }).exec()
     if (user) return res.send({ error: { code: 400, message: 'User already registered.' } })
 
-    user = await User.findOne({ email: request.email }).exec()
-    if (user) return res.send({ error: { code: 400, message: 'User already registered.' } })
-
     const newUser = new User(request)
 
     newUser.save(function (err, user) {
